@@ -9,18 +9,16 @@ password = "root"
 database = "program"
 port = 3307
 
+
 def connect():
     try:
         connection = mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database,
-            port=port
+            host=host, user=user, password=password, database=database, port=3307
         )
         return connection
     except mysql.connector.Error as err:
         print("Hata: ", err)
+
 
 def add(DersID, HocaID, GunID, SaatID):
     try:
@@ -47,14 +45,15 @@ def add(DersID, HocaID, GunID, SaatID):
             cursor.close()
             connection.close()
 
-def delete(ders_id):
+
+def delete(DersHocaID):
     try:
         connection = connect()
         cursor = connection.cursor()
 
         # Öğrenciyi silmek için SQL sorgusu
-        sql = "DELETE FROM dershocalar WHERE id = %s"
-        values = (ders_id,)
+        sql = "DELETE FROM dershocalar WHERE DersHocaID = %s"
+        values = (DersHocaID,)
 
         # Sorguyu çalıştır
         cursor.execute(sql, values)
@@ -72,14 +71,26 @@ def delete(ders_id):
             cursor.close()
             connection.close()
 
-def update(DersID, HocaID, GunID, SaatID, yeni_DersID, yeni_HocaID, yeni_GunID, yeni_SaatID):
+
+def update(
+    DersID, HocaID, GunID, SaatID, yeni_DersID, yeni_HocaID, yeni_GunID, yeni_SaatID
+):
     try:
         connection = connect()
         cursor = connection.cursor()
 
         # Ders ve Hoca güncellemek için SQL sorgusu
         sql = "UPDATE dershocalar SET DersID=%s, HocaID=%s, GunID=%s, SaatID=%s WHERE DersID=%s AND HocaID=%s AND GunID=%s AND SaatID=%s"
-        values = (yeni_DersID, yeni_HocaID, yeni_GunID, yeni_SaatID, DersID, HocaID, GunID, SaatID)
+        values = (
+            yeni_DersID,
+            yeni_HocaID,
+            yeni_GunID,
+            yeni_SaatID,
+            DersID,
+            HocaID,
+            GunID,
+            SaatID,
+        )
 
         # Sorguyu çalıştır
         cursor.execute(sql, values)
@@ -97,53 +108,60 @@ def update(DersID, HocaID, GunID, SaatID, yeni_DersID, yeni_HocaID, yeni_GunID, 
             cursor.close()
             connection.close()
 
+
 # Ana sayfa
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("inn.html")
+
 
 # Ders ve Hoca ekleme formu için endpoint
-@app.route('/add-endpoint', methods=['POST'])
+@app.route("/add-endpoint", methods=["POST"])
 def add_endpoint():
     data = request.json
 
-    DersID = data.get('DersID')
-    HocaID = data.get('HocaID')
-    GunID = data.get('GunID')
-    SaatID = data.get('SaatID')
+    DersID = data.get("DersID")
+    HocaID = data.get("HocaID")
+    GunID = data.get("GunID")
+    SaatID = data.get("SaatID")
 
     add(DersID, HocaID, GunID, SaatID)
 
-    return jsonify({'message': 'Veri başarıyla eklendi'})
+    return jsonify({"message": "Veri başarıyla eklendi"})
+
 
 # Ders silme formu için endpoint
-@app.route('/delete-endpoint', methods=['POST'])
+@app.route("/delete-endpoint", methods=["POST"])
 def delete_endpoint():
     data = request.json
 
-    ders_sil = data.get('ders_id')
-    delete(ders_sil)
+    DersHocaID = data.get("DersHocaID")
+    delete(DersHocaID)
 
-    return jsonify({'message': 'Veri başarıyla silindi'})
+    return jsonify({"message": "Veri başarıyla silindi"})
+
 
 # Ders güncelleme formu için endpoint
-@app.route('/update-endpoint', methods=['POST'])
+@app.route("/update-endpoint", methods=["POST"])
 def update_endpoint():
     data = request.json
 
-    DersID = data.get('DersID')
-    HocaID = data.get('HocaID')
-    GunID = data.get('GunID')
-    SaatID = data.get('SaatID')
+    DersID = data.get("DersID")
+    HocaID = data.get("HocaID")
+    GunID = data.get("GunID")
+    SaatID = data.get("SaatID")
 
-    yeni_DersID = data.get('yeni_DersID')
-    yeni_HocaID = data.get('yeni_HocaID')
-    yeni_GunID = data.get('yeni_GunID')
-    yeni_SaatID = data.get('yeni_SaatID')
+    yeni_DersID = data.get("yeni_DersID")
+    yeni_HocaID = data.get("yeni_HocaID")
+    yeni_GunID = data.get("yeni_GunID")
+    yeni_SaatID = data.get("yeni_SaatID")
 
-    update(DersID, HocaID, GunID, SaatID, yeni_DersID, yeni_HocaID, yeni_GunID, yeni_SaatID)
+    update(
+        DersID, HocaID, GunID, SaatID, yeni_DersID, yeni_HocaID, yeni_GunID, yeni_SaatID
+    )
 
-    return jsonify({'message': 'Veri başarıyla güncellendi'})
+    return jsonify({"message": "Veri başarıyla güncellendi"})
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run(debug=True)
