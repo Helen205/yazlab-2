@@ -1,7 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import mysql.connector
-
+    
 # MySQL bağlantısı
 conn = mysql.connector.connect(
     host="localhost", port=3307, user="root", password="root", database="program"
