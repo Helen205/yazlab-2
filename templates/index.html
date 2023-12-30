@@ -72,6 +72,43 @@
                   </div>
                 </div><!-- /.box-body -->
               </div><!-- /. box -->
+
+              <form id="dersHocaForm">
+                <label for="DersHocaID">Silmek istenilen Ders Hoca ID:</label>
+                <input type="number" id="DersHocaID" name="DersHocaID" required><br />
+          
+          
+                <label for="DersID">Ders ID:</label>
+                <input type="number" id="DersID" name="DersID" required /><br />
+          
+                <label for="HocaID">Hoca ID:</label>
+                <input type="number" id="HocaID" name="HocaID" required /><br />
+          
+                <label for="GunID">Gun ID:</label>
+                <input type="number" id="GunID" name="GunID" required /><br />
+          
+                <label for="SaatID">Saat ID:</label>
+                <input type="number" id="SaatID" name="SaatID" required /><br />
+          
+                <!-- Yeni verileri almak için input alanları -->
+                <label for="yeniDersID">Yeni Ders ID:</label>
+                <input type="number" id="yeniDersID" name="yeniDersID" required /><br />
+          
+                <label for="yeniHocaID">Yeni Hoca ID:</label>
+                <input type="number" id="yeniHocaID" name="yeniHocaID" required /><br />
+          
+                <label for="yeniGunID">Yeni Gun ID:</label>
+                <input type="number" id="yeniGunID" name="yeniGunID" required /><br />
+          
+                <label for="yeniSaatID">Yeni Saat ID:</label>
+                <input type="number" id="yeniSaatID" name="yeniSaatID" required /><br />
+          
+                <button type="button" onclick="addDersHoca()">Ders ve Hoca Ekle</button>
+                <button type="button" onclick="deleteDersHoca()">Ders ve Hoca Sil</button>
+                <button type="button" onclick="updateDersHoca()">
+                  Ders ve Hoca Güncelle
+                </button>
+              </form>
              
               <div class="box box-solid">
                 <div class="box-header with-border">
@@ -120,6 +157,97 @@
       </div><!-- /.content-wrapper -->
      
     </div><!-- ./wrapper -->
+    <script>
+      function addDersHoca() {
+        // JavaScript fonksiyonu buraya gelecek.
+        var DersID = document.getElementById("DersID").value;
+        var HocaID = document.getElementById("HocaID").value;
+        var GunID = document.getElementById("GunID").value;
+        var SaatID = document.getElementById("SaatID").value;
+
+        fetch("/add-endpoint", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            DersID: DersID,
+            HocaID: HocaID,
+            GunID: GunID,
+            SaatID: SaatID,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            alert("Ders ve Hoca Ekleme başarılı.");
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Ders ve Hoca Ekleme başarısız.");
+          });
+      }
+
+      function deleteDersHoca() {
+        // JavaScript fonksiyonu buraya gelecek.
+        var DersHocaID = document.getElementById("DersHocaID").value;
+
+        fetch("/delete-endpoint", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            DersHocaID: DersHocaID,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            alert("Ders ve Hoca Silme başarılı.");
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Ders ve Hoca Silme başarısız.");
+          });
+      }
+
+      function updateDersHoca() {
+        var DersID = document.getElementById("DersID").value;
+        var HocaID = document.getElementById("HocaID").value;
+        var GunID = document.getElementById("GunID").value;
+        var SaatID = document.getElementById("SaatID").value;
+
+        var yeni_DersID = document.getElementById("yeniDersID").value;
+        var yeni_HocaID = document.getElementById("yeniHocaID").value;
+        var yeni_GunID = document.getElementById("yeniGunID").value;
+        var yeni_SaatID = document.getElementById("yeniSaatID").value;
+
+        fetch("/update-endpoint", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            DersID: DersID,
+            HocaID: HocaID,
+            GunID: GunID,
+            SaatID: SaatID,
+            yeni_DersID: yeni_DersID,
+            yeni_HocaID: yeni_HocaID,
+            yeni_GunID: yeni_GunID,
+            yeni_SaatID: yeni_SaatID,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            alert(data.message);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    </script>
 
     <!-- jQuery 2.1.3 -->
     <script src="../static/plugins/jQuery/jQuery-2.1.3.min.js"></script>

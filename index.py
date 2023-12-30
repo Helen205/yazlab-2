@@ -112,7 +112,7 @@ def update(
 # Ana sayfa
 @app.route("/")
 def index():
-    return render_template("inn.html")
+    return render_template("index.html")
 
 
 # Ders ve Hoca ekleme formu için endpoint
