@@ -19,23 +19,27 @@ def connect():
     except mysql.connector.Error as err:
         print("Hata: ", err)
 
-
-def add(DersID, HocaID, GunID, SaatID):
+def find_id_by_name(table_name, name):
     try:
         connection = connect()
         cursor = connection.cursor()
 
-        # Ders ve Hoca eklemek için SQL sorgusu
-        sql = "INSERT INTO dershocalar (DersID, HocaID, GunID, SaatID) VALUES (%s, %s, %s, %s)"
-        values = (DersID, HocaID, GunID, SaatID)
+        id_column_name = f"{table_name.capitalize()}ID"
+        adi_column_name = f"{table_name.capitalize()}Adi"
 
-        # Sorguyu çalıştır
-        cursor.execute(sql, values)
+      
+        sql = f"SELECT {id_column_name} FROM {table_name} WHERE {adi_column_name} = %s"
 
-        # Değişiklikleri kaydet
-        connection.commit()
+      
+        cursor.execute(sql, (name,))
 
-        print("Ders ve Hoca eklendi.")
+        result = cursor.fetchone()
+
+        if result:
+            return result[0] 
+
+        print(f"{name} adlı veri bulunamadı.")
+        return None 
 
     except mysql.connector.Error as err:
         print("Hata: ", err)
@@ -46,19 +50,52 @@ def add(DersID, HocaID, GunID, SaatID):
             connection.close()
 
 
+def add(DersAdi, HocaAdi, GunAdi, SaatAdi):
+    try:
+        connection = connect()
+        cursor = connection.cursor()
+
+        DersID = find_id_by_name('ders', DersAdi)
+        HocaID = find_id_by_name('hoca', HocaAdi)
+        GunID = find_id_by_name('gun', GunAdi)
+        SaatID = find_id_by_name('saat', SaatAdi)
+
+        if None not in (DersID, HocaID, GunID, SaatID):
+
+            sql = "INSERT INTO dershocalar (DersID, HocaID, GunID, SaatID) VALUES (%s, %s, %s, %s)"
+            values = (DersID, HocaID, GunID, SaatID)
+
+
+            cursor.execute(sql, values)
+
+
+            connection.commit()
+
+            print("Ders ve Hoca eklendi.")
+        else:
+            print("Bazı veriler bulunamadı.")
+
+    except mysql.connector.Error as err:
+        print("Hata: ", err)
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
 def delete(DersHocaID):
     try:
         connection = connect()
         cursor = connection.cursor()
 
-        # Öğrenciyi silmek için SQL sorgusu
+
         sql = "DELETE FROM dershocalar WHERE DersHocaID = %s"
         values = (DersHocaID,)
 
-        # Sorguyu çalıştır
+
         cursor.execute(sql, values)
 
-        # Değişiklikleri kaydet
+
         connection.commit()
 
         print("Ders silindi.")
@@ -73,32 +110,41 @@ def delete(DersHocaID):
 
 
 def update(
-    DersID, HocaID, GunID, SaatID, yeni_DersID, yeni_HocaID, yeni_GunID, yeni_SaatID
+    DersAdi, HocaAdi, GunAdi, SaatAdi, yeni_DersAdi, yeni_HocaAdi, yeni_GunAdi, yeni_SaatAdi
 ):
     try:
         connection = connect()
         cursor = connection.cursor()
 
-        # Ders ve Hoca güncellemek için SQL sorgusu
-        sql = "UPDATE dershocalar SET DersID=%s, HocaID=%s, GunID=%s, SaatID=%s WHERE DersID=%s AND HocaID=%s AND GunID=%s AND SaatID=%s"
-        values = (
-            yeni_DersID,
-            yeni_HocaID,
-            yeni_GunID,
-            yeni_SaatID,
-            DersID,
-            HocaID,
-            GunID,
-            SaatID,
-        )
+        DersID = find_id_by_name('ders', DersAdi)
+        HocaID = find_id_by_name('hoca', HocaAdi)
+        GunID = find_id_by_name('gun', GunAdi)
+        SaatID = find_id_by_name('saat', SaatAdi)
+        yeni_DersID = find_id_by_name('ders', yeni_DersAdi)
+        yeni_HocaID = find_id_by_name('hoca', yeni_HocaAdi)
+        yeni_GunID = find_id_by_name('gun', yeni_GunAdi)
+        yeni_SaatID = find_id_by_name('saat', yeni_SaatAdi)
 
-        # Sorguyu çalıştır
-        cursor.execute(sql, values)
+        if None not in (DersID, HocaID, GunID, SaatID,yeni_DersID,yeni_HocaID,yeni_GunID,yeni_SaatID):
+            sql = "UPDATE dershocalar SET DersID=%s, HocaID=%s, GunID=%s, SaatID=%s WHERE DersID=%s AND HocaID=%s AND GunID=%s AND SaatID=%s"
+            values = (
+                yeni_DersID,
+                yeni_HocaID,
+                yeni_GunID,
+                yeni_SaatID,
+                DersID,
+                HocaID,
+                GunID,
+                SaatID,
+            )
 
-        # Değişiklikleri kaydet
-        connection.commit()
+            cursor.execute(sql, values)
+            connection.commit()
 
-        print("Ders ve Hoca güncellendi.")
+            print("Ders ve Hoca güncellendi.")
+
+        else:
+            print("Bazı veriler bulunamadı.")
 
     except mysql.connector.Error as err:
         print("Hata: ", err)
@@ -109,13 +155,11 @@ def update(
             connection.close()
 
 
-# Ana sayfa
 @app.route("/")
 def index():
     return render_template("index.html")
 
 
-# Ders ve Hoca ekleme formu için endpoint
 @app.route("/add-endpoint", methods=["POST"])
 def add_endpoint():
     data = request.json
@@ -125,12 +169,19 @@ def add_endpoint():
     GunID = data.get("GunID")
     SaatID = data.get("SaatID")
 
+
+    if not all([DersID, HocaID, GunID, SaatID]):
+        DersID = find_id_by_name('ders', data.get("DersAdi"))
+        HocaID = find_id_by_name('hoca', data.get("HocaAdi"))
+        GunID = find_id_by_name('gun', data.get("GunAdi"))
+        SaatID = find_id_by_name('saat', data.get("SaatAdi"))
+
     add(DersID, HocaID, GunID, SaatID)
 
     return jsonify({"message": "Veri başarıyla eklendi"})
 
 
-# Ders silme formu için endpoint
+
 @app.route("/delete-endpoint", methods=["POST"])
 def delete_endpoint():
     data = request.json
@@ -140,12 +191,11 @@ def delete_endpoint():
 
     return jsonify({"message": "Veri başarıyla silindi"})
 
-
-# Ders güncelleme formu için endpoint
 @app.route("/update-endpoint", methods=["POST"])
 def update_endpoint():
     data = request.json
 
+   
     DersID = data.get("DersID")
     HocaID = data.get("HocaID")
     GunID = data.get("GunID")
@@ -156,12 +206,22 @@ def update_endpoint():
     yeni_GunID = data.get("yeni_GunID")
     yeni_SaatID = data.get("yeni_SaatID")
 
-    update(
-        DersID, HocaID, GunID, SaatID, yeni_DersID, yeni_HocaID, yeni_GunID, yeni_SaatID
-    )
+    if not all([DersID, HocaID, GunID, SaatID,yeni_DersID,yeni_HocaID,yeni_GunID,yeni_SaatID]):
+        DersID = find_id_by_name('ders', data.get("DersAdi"))
+        HocaID = find_id_by_name('hoca', data.get("HocaAdi"))
+        GunID = find_id_by_name('gun', data.get("GunAdi"))
+        SaatID = find_id_by_name('saat', data.get("SaatAdi"))
+
+        yeni_DersID = find_id_by_name('ders', data.get("yeni_DersAdi"))
+        yeni_HocaID = find_id_by_name('hoca', data.get("yeni_HocaAdi"))
+        yeni_GunID = find_id_by_name('gun', data.get("yeni_GunAdi"))
+        yeni_SaatID = find_id_by_name('saat', data.get("yeni_SaatAdi"))
+
+    update(DersID, HocaID, GunID, SaatID,yeni_DersID,yeni_HocaID,yeni_GunID,yeni_SaatID)
 
     return jsonify({"message": "Veri başarıyla güncellendi"})
 
+    
 
 if __name__ == "__main__":
     app.run(debug=True)

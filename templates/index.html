@@ -99,39 +99,38 @@
 >>>>>>> 1f89f7c6291afe1e5f6dc4d913a199686c0f3132
               <form id="dersHocaForm">
                 <label for="DersHocaID">Silmek istenilen Ders Hoca ID:</label>
-                <input type="number" id="DersHocaID" name="DersHocaID" required><br />
+                <input type="number" id="DersHocaID" name="DersHocaID" class="form-control" required><br />
           
           
-                <label for="DersID">Ders ID:</label>
-                <input type="number" id="DersID" name="DersID" required /><br />
+                <label for="DersID">Ders Adı:</label>
+                <input type="text" id="DersID" name="DersID" class="form-control" required /><br />
+            
+                <label for="HocaID">Hoca Adı:</label>
+                <input type="text" id="HocaID" name="HocaID" class="form-control" required /><br />
+            
+                <label for="GunID">Gün Adı:</label>
+                <input type="text" id="GunID" name="GunID" class="form-control" required /><br />
+            
+                <label for="SaatID">Saat:</label>
+                <input type="text" id="SaatID" name="SaatID" class="form-control" required /><br />
+            
+                <label for="yeniDersID">Yeni Ders Adı:</label>
+                <input type="text" id="yeniDersID" name="yeniDersID" class="form-control" required /><br />
+
+                <label for="yeniHocaID">Yeni Hoca Adı:</label>
+                <input type="text" id="yeniHocaID" name="yeniHocaID" class="form-control" required /><br />
+
+                <label for="yeniGunID">Yeni Gün Adı:</label>
+                <input type="text" id="yeniGunID" name="yeniGunID" class="form-control" required /><br />
+
+                <label for="yeniSaatID">Yeni Saat:</label>
+                <input type="text" id="yeniSaatID" name="yeniSaatID" class="form-control" required /><br />
+
+                                
           
-                <label for="HocaID">Hoca ID:</label>
-                <input type="number" id="HocaID" name="HocaID" required /><br />
-          
-                <label for="GunID">Gun ID:</label>
-                <input type="number" id="GunID" name="GunID" required /><br />
-          
-                <label for="SaatID">Saat ID:</label>
-                <input type="number" id="SaatID" name="SaatID" required /><br />
-          
-                <!-- Yeni verileri almak için input alanları -->
-                <label for="yeniDersID">Yeni Ders ID:</label>
-                <input type="number" id="yeniDersID" name="yeniDersID" required /><br />
-          
-                <label for="yeniHocaID">Yeni Hoca ID:</label>
-                <input type="number" id="yeniHocaID" name="yeniHocaID" required /><br />
-          
-                <label for="yeniGunID">Yeni Gun ID:</label>
-                <input type="number" id="yeniGunID" name="yeniGunID" required /><br />
-          
-                <label for="yeniSaatID">Yeni Saat ID:</label>
-                <input type="number" id="yeniSaatID" name="yeniSaatID" required /><br />
-          
-                <button type="button" onclick="addDersHoca()">Ders ve Hoca Ekle</button>
-                <button type="button" onclick="deleteDersHoca()">Ders ve Hoca Sil</button>
-                <button type="button" onclick="updateDersHoca()">
-                  Ders ve Hoca Güncelle
-                </button>
+                <button type="button"  class="btn btn-primary btn-flat" onclick="addDersHoca()">Ders ve Hoca Ekle</button>
+                <button type="button"  class="btn btn-primary btn-flat" onclick="deleteDersHoca()">Ders ve Hoca Sil</button>
+                <button type="button"  class="btn btn-primary btn-flat" onclick="updateDersHoca()">Ders ve Hoca Güncelle</button>
               </form>
 <<<<<<< HEAD
             </div>
@@ -185,39 +184,39 @@
      
     </div><!-- ./wrapper -->
     <script>
-      function addDersHoca() {
-        // JavaScript fonksiyonu buraya gelecek.
+    function addDersHoca() {
         var DersID = document.getElementById("DersID").value;
         var HocaID = document.getElementById("HocaID").value;
         var GunID = document.getElementById("GunID").value;
         var SaatID = document.getElementById("SaatID").value;
 
         fetch("/add-endpoint", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            DersID: DersID,
-            HocaID: HocaID,
-            GunID: GunID,
-            SaatID: SaatID,
-          }),
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                DersID: DersID,
+                HocaID: HocaID,
+                GunID: GunID,
+                SaatID: SaatID,
+            }),
         })
-          .then((response) => response.json())
-          .then((data) => {
+        .then((response) => response.json())
+        .then((data) => {
             console.log(data);
-            alert("Ders ve Hoca Ekleme başarılı.");
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            alert("Ders ve Hoca Ekleme başarısız.");
-          });
-      }
+            alert("Ders ve Hoca ekleme başarılı.");
+        })
+        .catch((error) => {
+            console.error("Hata:", error);
+            alert("Ders ve Hoca ekleme başarısız.");
+        });
+    }
+
+
 
       function deleteDersHoca() {
-        // JavaScript fonksiyonu buraya gelecek.
-        var DersHocaID = document.getElementById("DersHocaID").value;
+        var DersHocaID = document.getElementById("DersHoca").value;
 
         fetch("/delete-endpoint", {
           method: "POST",
@@ -240,40 +239,46 @@
       }
 
       function updateDersHoca() {
-        var DersID = document.getElementById("DersID").value;
-        var HocaID = document.getElementById("HocaID").value;
-        var GunID = document.getElementById("GunID").value;
-        var SaatID = document.getElementById("SaatID").value;
+      var DersID = document.getElementById("DersID").value;
+      var HocaID = document.getElementById("HocaID").value;
+      var GunID = document.getElementById("GunID").value;
+      var SaatID = document.getElementById("SaatID").value;
 
-        var yeni_DersID = document.getElementById("yeniDersID").value;
-        var yeni_HocaID = document.getElementById("yeniHocaID").value;
-        var yeni_GunID = document.getElementById("yeniGunID").value;
-        var yeni_SaatID = document.getElementById("yeniSaatID").value;
+      var yeniDersID = document.getElementById("yeniDersID").value;
+      var yeniHocaID = document.getElementById("yeniHocaID").value;
+      var yeniGunID = document.getElementById("yeniGunID").value;
+      var yeniSaatID = document.getElementById("yeniSaatID").value;
 
-        fetch("/update-endpoint", {
+      fetch("/update-endpoint", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+              "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            DersID: DersID,
-            HocaID: HocaID,
-            GunID: GunID,
-            SaatID: SaatID,
-            yeni_DersID: yeni_DersID,
-            yeni_HocaID: yeni_HocaID,
-            yeni_GunID: yeni_GunID,
-            yeni_SaatID: yeni_SaatID,
+              DersID: DersID,
+              HocaID: HocaID,
+              GunID: GunID,
+              SaatID: SaatID,
+              yeni_DersID: yeniDersID,
+              yeni_HocaID: yeniHocaID,
+              yeni_GunID: yeniGunID,
+              yeni_SaatID: yeniSaatID,
           }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            alert(data.message);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }
+      })
+      .then((response) => response.json())
+      .then((data) => {
+          console.log(data);
+          alert("Ders ve Hoca güncelleme başarılı.");
+      })
+      .catch((error) => {
+          console.error("Hata:", error);
+          alert("Ders ve Hoca güncelleme başarısız.");
+      });
+  }
+
+
+
+
     </script>
 
     <!-- jQuery 2.1.3 -->
