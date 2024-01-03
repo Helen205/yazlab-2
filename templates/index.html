@@ -6,48 +6,44 @@
 
     <title>Öğretmen Program Takvimi</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.2 -->
-<<<<<<< HEAD
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-=======
-    <link href="../static/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
->>>>>>> 1f89f7c6291afe1e5f6dc4d913a199686c0f3132
-    <!-- Font Awesome Icons -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <!-- Ionicons -->
-    <link href="https://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-    <!-- fullCalendar 2.2.5-->
-<<<<<<< HEAD
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.5/fullcalendar.min.css" rel="stylesheet" type="text/css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.5/fullcalendar.print.css" rel="stylesheet" type="text/css" media="print" />
-=======
-    <link href="../static/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css" />
-    <link href="../static/plugins/fullcalendar/fullcalendar.print.css" rel="stylesheet" type="text/css" media='print' />
->>>>>>> 1f89f7c6291afe1e5f6dc4d913a199686c0f3132
-    <!-- Theme style -->
-    <link href="../static/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
-    <!-- AdminLTE Skins. Choose a skin from the css/skins 
-         folder instead of downloading all of them to reduce the load. -->
-    <link href="../static/dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
-<<<<<<< HEAD
-=======
-
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <style>
+      table {
+        width: 80%;
+        border-collapse: collapse;
+        margin: 20px;
+      }
   
->>>>>>> 1f89f7c6291afe1e5f6dc4d913a199686c0f3132
-    
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <!-- jQuery UI -->
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+      th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+      }
+  
+      th {
+        background-color: #f2f2f2;
+      }
+  
+      .input-container {
+        margin-bottom: 20px;
+      }
+  
+      input {
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 5px;
+      }
+  
+      .drag-container {
+        margin-bottom: 20px;
+      }
+  
+      .draggable {
+        cursor: move;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 5px;
+      }
+      </style>
 
   
     
@@ -73,30 +69,8 @@
                   <a href="calender1043.html" class="class-box">1043</a>
                 </div>
               </div>
-                <div class="box-body">
-         
-              <div class="box box-solid">
-                <div class="box-header with-border">
-                  <h4 class="box-title">Hocaları ekleyiniz</h4>
-                </div>
-              
-                <div class="box-body">
-                  <!-- the events -->
-                  <div id='external-events'>
-                    <div class="checkbox">
-                      <label for='drop-remove'>
-                        <input type='checkbox' id='drop-remove' />
-                        Sürüklediğinizde silin
-                      </label>
-                    </div>
-                  </div>
-                </div><!-- /.box-body -->
-              </div><!-- /. box -->
-<<<<<<< HEAD
-              <div class="box-body">
-=======
 
->>>>>>> 1f89f7c6291afe1e5f6dc4d913a199686c0f3132
+
               <form id="dersHocaForm">
                 <label for="DersHocaID">Silmek istenilen Ders Hoca ID:</label>
                 <input type="number" id="DersHocaID" name="DersHocaID" class="form-control" required><br />
@@ -139,57 +113,6 @@
                 <button type="button"  class="btn btn-primary btn-flat" onclick="deleteDersHoca()">Ders ve Hoca Sil</button>
                 <button type="button"  class="btn btn-primary btn-flat" onclick="updateDersHoca()">Ders ve Hoca Güncelle</button>
               </form>
-<<<<<<< HEAD
-            </div>
-=======
-             
->>>>>>> 1f89f7c6291afe1e5f6dc4d913a199686c0f3132
-              <div class="box box-solid">
-                <div class="box-header with-border">
-                  <h3 class="box-title">Hoca ismini giriniz:</h3>
-                </div>
-                <div class="box-body">
-                  <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
-                  </div>
-                  
-                    <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
-                    <ul class="fc-color-picker" id="color-chooser">
-                      <li><a href="#" style="color: aqua;"><i class="fa fa-square"></i></a></li>
-                      <li><a href="#" style="color: blue;"><i class="fa fa-square"></i></a></li>
-                      <li><a href="#" style="color: lightblue;"><i class="fa fa-square"></i></a></li>
-                      <li><a href="#" style="color: teal;"><i class="fa fa-square"></i></a></li>
-                      <li><a href="#" style="color: rgba(118, 118, 18, 0.8);"><i class="fa fa-square"></i></a></li>	
-                      <li><a href="#" style="color: rgb(132, 159, 52);"><i class="fa fa-square"></i></a></li>																		
-                      <li><a href="#" style="color: lightsalmon;"><i class="fa fa-square"></i></a></li>
-                      <li><a href="#" style="color: red;"><i class="fa fa-square"></i></a></li>
-                      <li><a href="#" style="color: purple;"><i class="fa fa-square"></i></a></li>
-                      <li><a href="#" style="color: brown;"><i class="fa fa-square"></i></a></li>
-                      <li><a href="#" style="color: black;"><i class="fa fa-square"></i></a></li>
-                    </ul>
-                  </div><!-- /btn-group -->
-                  <div class="input-group">
-                    <input id="new-event" type="text" class="form-control" placeholder="Hoca İsmi">
-                    <div class="input-group-btn">
-                      <button id="add-new-event" type="button" class="btn btn-primary btn-flat">Ekle</button>
-                     
-                    </div><!-- /btn-group -->
-                  </div><!-- /input-group -->
-                </div>
-              </div>
-            </div><!-- /.col -->
-            <div class="col-md-9">
-              <div class="box box-primary">
-                <div class="box-body no-padding">
-                  <!-- THE CALENDAR -->
-                  <div id="calendar"></div>
-                </div><!-- /.box-body -->
-              </div><!-- /. box -->
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </section><!-- /.content -->
-      </div><!-- /.content-wrapper -->
-     
-    </div><!-- ./wrapper -->
     <script>
     function addDersHoca() {
         var DersID = document.getElementById("DersID").value;
@@ -288,140 +211,154 @@
           alert("Ders ve Hoca güncelleme başarısız.");
       });
   }
+  </script>
+  
+    <h2>Haftanın Günleri ve Saat Aralıkları</h2>
 
+    <div class="input-container">
+      <label for="bagimsizInput">Bağımsız Input:</label>
+      <input type="text" id="bagimsizInput" placeholder="Veri giriniz">
+      <button id="ekleButton">Ekle</button>
+    </div>
+  
+    <div class="drag-container">
+      <div class="draggable" draggable="true" id="surukleBirak">Sürükleyip Bırak</div>
+    </div>
 
+  <table id="haftaTablosu">
+    <tr>
+      <th>Gün</th>
+      <th>Saat 9:00 - 10:00</th>
+      <th>Saat 10:00 - 11:00</th>
+      <th>Saat 11:00 - 12:00</th>
+      <th>Saat 12:00 - 13:00</th>
+      <th>Saat 13:00 - 14:00</th>
+      <th>Saat 14:00 - 15:00</th>
+      <th>Saat 15:00 - 16:00</th>
+    </tr>
+    <tr>
+      <td>Pazartesi</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Salı</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Çarşamba</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Perşembe</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Cuma</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Cumartesi</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Pazar</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const draggableElement = document.getElementById('surukleBirak');
+      const tableElement = document.getElementById('haftaTablosu');
+      const bagimsizInputElement = document.getElementById('bagimsizInput');
+      const ekleButton = document.getElementById('ekleButton');
 
-    </script>
-
-    <!-- jQuery 2.1.3 -->
-    <script src="../static/plugins/jQuery/jQuery-2.1.3.min.js"></script>
-    <!-- Bootstrap 3.3.2 JS -->
-    <script src="../static/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-    <!-- jQuery UI 1.11.1 -->
-    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.min.js" type="text/javascript"></script>
-    <!-- Slimscroll -->
-    <script src="../static/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-    <!-- FastClick -->
-    <script src='../static/plugins/fastclick/fastclick.min.js'></script>
-    <!-- AdminLTE App -->
-    <script src="../static/dist/js/app.min.js" type="text/javascript"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="../static/dist/js/demo.js" type="text/javascript"></script>
-    <!-- fullCalendar 2.2.5 -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>
-    <script src="../static/plugins/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
-    <!-- Page specific script -->
-    <script type="text/javascript">
-      $(function () {
-
-        /* initialize the external events
-         -----------------------------------------------------------------*/
-        function ini_events(ele) {
-          ele.each(function () {
-
-            // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-            // it doesn't need to have a start or end
-            var eventObject = {
-              title: $.trim($(this).text()) // use the element's text as the event title
-            };
-
-            // store the Event Object in the DOM element so we can get to it later
-            $(this).data('eventObject', eventObject);
-
-            // make the event draggable using jQuery UI
-            $(this).draggable({
-              zIndex: 1070,
-              revert: true, // will cause the event to go back to its
-              revertDuration: 0  //  original position after the drag
-            });
-
-          });
-        }
-        ini_events($('#external-events div.external-event'));
-
-        /* initialize the calendar
-         -----------------------------------------------------------------*/
-        //Date for the calendar events (dummy data)
-        var date = new Date();
-        var d = date.getDate(),
-                m = date.getMonth(),
-                y = date.getFullYear();
-        $('#calendar').fullCalendar({
-          header: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'month,agendaWeek'
-          },
-          buttonText: {
-            today: 'Bugün',
-            month: 'Ay',
-            week: 'Hafta',
-            day: 'day'
-           
-          },
-          editable: true,
-          droppable: true, // this allows things to be dropped onto the calendar !!!
-          drop: function (date, allDay) { // this function is called when something is dropped
-
-            // retrieve the dropped element's stored Event Object
-            var originalEventObject = $(this).data('eventObject');
-
-            // we need to copy it, so that multiple events don't have a reference to the same object
-            var copiedEventObject = $.extend({}, originalEventObject);
-
-            // assign it the date that was reported
-            copiedEventObject.start = date;
-            copiedEventObject.allDay = allDay;
-            copiedEventObject.backgroundColor = $(this).css("background-color");
-            copiedEventObject.borderColor = $(this).css("border-color");
-
-            // render the event on the calendar
-            // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-            $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-
-            // is the "remove after drop" checkbox checked?
-            if ($('#drop-remove').is(':checked')) {
-              // if so, remove the element from the "Draggable Events" list
-              $(this).remove();
-            }
-
-          }
-        });
-        
-        /* ADDING EVENTS */
-        var currColor = "#3c8dbc"; //Red by default
-        //Color chooser button
-        var colorChooser = $("#color-chooser-btn");
-        $("#color-chooser > li > a").click(function (e) {
-          e.preventDefault();
-          //Save color
-          currColor = $(this).css("color");
-          //Add color effect to button
-          $('#add-new-event').css({"background-color": currColor, "border-color": currColor});
-        });
-        $("#add-new-event").click(function (e) {
-          e.preventDefault();
-          //Get value and make sure it is not null
-          var val = $("#new-event").val();
-          if (val.length == 0) {
-            return;
-          }
-
-          //Create events
-          var event = $("<div />");
-          event.css({"background-color": currColor, "border-color": currColor, "color": "#fff"}).addClass("external-event");
-          event.html(val);
-          $('#external-events').prepend(event);
-
-          //Add draggable funtionality
-          ini_events(event);
-
-          //Remove event from text input
-          $("#new-event").val("");
-        });
+      draggableElement.addEventListener('dragstart', function (e) {
+        e.dataTransfer.setData('text/plain', bagimsizInputElement.value);
       });
-    </script>
+
+      tableElement.addEventListener('dragover', function (e) {
+        e.preventDefault();
+      });
+
+      tableElement.addEventListener('drop', function (e) {
+        e.preventDefault();
+        const data = e.dataTransfer.getData('text/plain');
+        const tableCell = e.target.closest('td');
+
+        if (tableCell) {
+          tableCell.textContent = data;
+        }
+      });
+
+      ekleButton.addEventListener('click', function () {
+        const selectedCell = document.querySelector('.selected-cell');
+        if (selectedCell) {
+          selectedCell.textContent = bagimsizInputElement.value;
+        }
+      });
+
+      // Tablodaki hücrelere tıklanınca seçili hücre olacak
+      tableElement.addEventListener('click', function (e) {
+        const clickedCell = e.target.closest('td');
+        if (clickedCell) {
+          // Önceki seçili hücrenin stilini temizle
+          const selectedCell = document.querySelector('.selected-cell');
+          if (selectedCell) {
+            selectedCell.classList.remove('selected-cell');
+          }
+          // Yeni seçili hücreye stil ekle
+          clickedCell.classList.add('selected-cell');
+        }
+      });
+    });
+  </script>
+
+
+
+   
 
   </body>
 </html>
