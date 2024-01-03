@@ -113,6 +113,9 @@
             
                 <label for="SaatID">Saat:</label>
                 <input type="text" id="SaatID" name="SaatID" class="form-control" required /><br />
+
+                <label for="Sinif">Sınıf:</label>
+                <input type="text" id="Sinif" name="Sinif" class="form-control" required /><br />
             
                 <label for="yeniDersID">Yeni Ders Adı:</label>
                 <input type="text" id="yeniDersID" name="yeniDersID" class="form-control" required /><br />
@@ -125,6 +128,10 @@
 
                 <label for="yeniSaatID">Yeni Saat:</label>
                 <input type="text" id="yeniSaatID" name="yeniSaatID" class="form-control" required /><br />
+
+                
+                <label for="yeniSinif">Yeni Sınıf:</label>
+                <input type="text" id="yeniSinif" name="yeniSinif" class="form-control" required /><br />
 
                                 
           
@@ -189,6 +196,7 @@
         var HocaID = document.getElementById("HocaID").value;
         var GunID = document.getElementById("GunID").value;
         var SaatID = document.getElementById("SaatID").value;
+        var Sinif = document.getElementById("Sinif").value;
 
         fetch("/add-endpoint", {
             method: "POST",
@@ -200,6 +208,7 @@
                 HocaID: HocaID,
                 GunID: GunID,
                 SaatID: SaatID,
+                Sinif: Sinif,
             }),
         })
         .then((response) => response.json())
@@ -243,11 +252,13 @@
       var HocaID = document.getElementById("HocaID").value;
       var GunID = document.getElementById("GunID").value;
       var SaatID = document.getElementById("SaatID").value;
+      var Sinif = document.getElementById("Sinif").value;
 
       var yeniDersID = document.getElementById("yeniDersID").value;
       var yeniHocaID = document.getElementById("yeniHocaID").value;
       var yeniGunID = document.getElementById("yeniGunID").value;
       var yeniSaatID = document.getElementById("yeniSaatID").value;
+      var yeniSinif = document.getElementById("yeniSinif").value;
 
       fetch("/update-endpoint", {
           method: "POST",
@@ -259,10 +270,12 @@
               HocaID: HocaID,
               GunID: GunID,
               SaatID: SaatID,
+              Sinif:Sinif,
               yeni_DersID: yeniDersID,
               yeni_HocaID: yeniHocaID,
               yeni_GunID: yeniGunID,
               yeni_SaatID: yeniSaatID,
+              yeni_Sinif: yeniSinif,
           }),
       })
       .then((response) => response.json())

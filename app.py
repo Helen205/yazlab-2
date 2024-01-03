@@ -53,10 +53,11 @@ def satisfies_constraints(node, coloring):
     hoca_id = node ["HocaID"]
     kacinci_sinif = node ["KacinciSinif"]
     ders_id = node ["DersID"]
+    sinif = node ["Sinif"]
     for other_node, other_props in G.nodes.items():
         if other_node != node and other_props.get("GunID") == hoca_gun and other_props.get("SaatID") == hoca_saat and other_props.get("KacinciSinif") == kacinci_sinif:
             return False
-        if other_node != node and other_props.get("GunID") == hoca_gun and other_props.get("SaatID") == hoca_saat and other_props.get("HocaID") == hoca_id and other_props.get("DersID") == ders_id:
+        if other_node != node and other_props.get("GunID") == hoca_gun and other_props.get("SaatID") == hoca_saat and other_props.get("HocaID") == hoca_id and other_props.get("DersID") == ders_id and other_props.get("Sinif") == sinif:
             return False
     return True
 

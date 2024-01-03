@@ -50,7 +50,7 @@ def find_id_by_name(table_name, name):
             connection.close()
 
 
-def add(DersAdi, HocaAdi, GunAdi, SaatAdi):
+def add(DersAdi, HocaAdi, GunAdi, SaatAdi, Sinif):
     try:
         connection = connect()
         cursor = connection.cursor()
@@ -60,10 +60,10 @@ def add(DersAdi, HocaAdi, GunAdi, SaatAdi):
         GunID = find_id_by_name('gun', GunAdi)
         SaatID = find_id_by_name('saat', SaatAdi)
 
-        if None not in (DersID, HocaID, GunID, SaatID):
+        if None not in (DersID, HocaID, GunID, SaatID, Sinif):
 
-            sql = "INSERT INTO dershocalar (DersID, HocaID, GunID, SaatID) VALUES (%s, %s, %s, %s)"
-            values = (DersID, HocaID, GunID, SaatID)
+            sql = "INSERT INTO dershocalar (DersID, HocaID, GunID, SaatID, Sinif) VALUES (%s, %s, %s, %s, %s)"
+            values = (DersID, HocaID, GunID, SaatID, Sinif)
 
 
             cursor.execute(sql, values)
@@ -110,7 +110,7 @@ def delete(DersHocaID):
 
 
 def update(
-    DersAdi, HocaAdi, GunAdi, SaatAdi, yeni_DersAdi, yeni_HocaAdi, yeni_GunAdi, yeni_SaatAdi
+    DersAdi, HocaAdi, GunAdi, SaatAdi, Sinif, yeni_DersAdi, yeni_HocaAdi, yeni_GunAdi, yeni_SaatAdi, yeni_Sinif
 ):
     try:
         connection = connect()
@@ -125,17 +125,19 @@ def update(
         yeni_GunID = find_id_by_name('gun', yeni_GunAdi)
         yeni_SaatID = find_id_by_name('saat', yeni_SaatAdi)
 
-        if None not in (DersID, HocaID, GunID, SaatID,yeni_DersID,yeni_HocaID,yeni_GunID,yeni_SaatID):
-            sql = "UPDATE dershocalar SET DersID=%s, HocaID=%s, GunID=%s, SaatID=%s WHERE DersID=%s AND HocaID=%s AND GunID=%s AND SaatID=%s"
+        if None not in (DersID, HocaID, GunID, SaatID,Sinif,yeni_DersID,yeni_HocaID,yeni_GunID,yeni_SaatID,yeni_Sinif):
+            sql = "UPDATE dershocalar SET DersID=%s, HocaID=%s, GunID=%s, SaatID=%s, Sinif= %s WHERE DersID=%s AND HocaID=%s AND GunID=%s AND SaatID=%s AND Sinif=%s"
             values = (
                 yeni_DersID,
                 yeni_HocaID,
                 yeni_GunID,
                 yeni_SaatID,
+                yeni_Sinif,
                 DersID,
                 HocaID,
                 GunID,
                 SaatID,
+                Sinif,
             )
 
             cursor.execute(sql, values)
@@ -168,15 +170,15 @@ def add_endpoint():
     HocaID = data.get("HocaID")
     GunID = data.get("GunID")
     SaatID = data.get("SaatID")
+    Sinif = data.get("Sinif")
 
-
-    if not all([DersID, HocaID, GunID, SaatID]):
+    if not all([DersID, HocaID, GunID, SaatID,Sinif]):
         DersID = find_id_by_name('ders', data.get("DersAdi"))
         HocaID = find_id_by_name('hoca', data.get("HocaAdi"))
         GunID = find_id_by_name('gun', data.get("GunAdi"))
         SaatID = find_id_by_name('saat', data.get("SaatAdi"))
 
-    add(DersID, HocaID, GunID, SaatID)
+    add(DersID, HocaID, GunID, SaatID, Sinif)
 
     return jsonify({"message": "Veri başarıyla eklendi"})
 
@@ -200,13 +202,15 @@ def update_endpoint():
     HocaID = data.get("HocaID")
     GunID = data.get("GunID")
     SaatID = data.get("SaatID")
+    Sinif = data.get("Sinif")
 
     yeni_DersID = data.get("yeni_DersID")
     yeni_HocaID = data.get("yeni_HocaID")
     yeni_GunID = data.get("yeni_GunID")
     yeni_SaatID = data.get("yeni_SaatID")
+    yeni_Sinif = data.get("yeni_Sinif")
 
-    if not all([DersID, HocaID, GunID, SaatID,yeni_DersID,yeni_HocaID,yeni_GunID,yeni_SaatID]):
+    if not all([DersID, HocaID, GunID, SaatID, Sinif, yeni_DersID,yeni_HocaID,yeni_GunID,yeni_SaatID,yeni_Sinif]):
         DersID = find_id_by_name('ders', data.get("DersAdi"))
         HocaID = find_id_by_name('hoca', data.get("HocaAdi"))
         GunID = find_id_by_name('gun', data.get("GunAdi"))
@@ -217,7 +221,7 @@ def update_endpoint():
         yeni_GunID = find_id_by_name('gun', data.get("yeni_GunAdi"))
         yeni_SaatID = find_id_by_name('saat', data.get("yeni_SaatAdi"))
 
-    update(DersID, HocaID, GunID, SaatID,yeni_DersID,yeni_HocaID,yeni_GunID,yeni_SaatID)
+    update(DersID, HocaID, GunID, SaatID,Sinif,yeni_DersID,yeni_HocaID,yeni_GunID,yeni_SaatID,yeni_Sinif)
 
     return jsonify({"message": "Veri başarıyla güncellendi"})
 
