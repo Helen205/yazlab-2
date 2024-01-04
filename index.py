@@ -156,6 +156,46 @@ def update(
             cursor.close()
             connection.close()
 
+def get_schedule_from_database():
+    try:
+        connection = connect()
+        cursor = connection.cursor()
+
+        # Veritabanından günleri çek
+        cursor.execute("SELECT DISTINCT GunAdi FROM gun")
+        days = [row[0] for row in cursor.fetchall()]
+
+        # Günler için dersleri çek
+        schedule_data = {}
+
+        for day in days:
+            cursor.execute("""
+                SELECT s.SaatAdi, d.DersAdi
+                FROM ders d
+                JOIN dershocalar dh ON d.DersID = dh.DersID
+                JOIN gun g ON dh.GunID = g.GunID
+                JOIN saat s ON dh.SaatID = s.SaatID
+                WHERE g.GunAdi = %s
+                ORDER BY s.SaatAdi;
+            """, (day,))
+
+            # Her gün için bir saat ve o saate ait ders bilgilerini içeren bir sözlük oluştur
+            lessons_by_hour = {hour: lesson for hour, lesson in cursor.fetchall()}
+            
+            # Oluşturulan sözlüğü gün adıyla birlikte schedule_data'ya ekle
+            schedule_data[day] = lessons_by_hour
+
+        return schedule_data
+
+    except mysql.connector.Error as err:
+        print("Hata: ", err)
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+
 
 @app.route("/")
 def index():
@@ -193,6 +233,7 @@ def delete_endpoint():
 
     return jsonify({"message": "Veri başarıyla silindi"})
 
+
 @app.route("/update-endpoint", methods=["POST"])
 def update_endpoint():
     data = request.json
@@ -224,6 +265,27 @@ def update_endpoint():
     update(DersID, HocaID, GunID, SaatID,Sinif,yeni_DersID,yeni_HocaID,yeni_GunID,yeni_SaatID,yeni_Sinif)
 
     return jsonify({"message": "Veri başarıyla güncellendi"})
+
+@app.route('/get-schedule', methods=['GET'])
+def get_schedule():
+    # Veritabanından gün ve ders bilgilerini çek
+    schedule_data = get_schedule_from_database()
+
+    # Tabloyu HTML formatına çevir
+    table_html = '<table id="haftaTablosu">'
+    table_html += '<tr><th>Gün</th><th>Saat 9:00 - 10:00</th><th>Saat 10:00 - 11:00</th><th>Saat 11:00 - 12:00</th><th>Saat 12:00 - 13:00</th><th>Saat 13:00 - 14:00</th><th>Saat 14:00 - 15:00</th><th>Saat 15:00 - 16:00</th></tr>'
+
+    for gun, dersler in schedule_data.items():
+        table_html += f'<tr><td>{gun}</td>'
+        for saat, ders in dersler.items():
+            table_html += f'<td>{ders}</td>'
+        table_html += '</tr>'
+
+    table_html += '</table>'
+
+    return table_html
+
+
 
     
 

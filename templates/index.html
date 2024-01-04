@@ -22,28 +22,7 @@
       th {
         background-color: #f2f2f2;
       }
-  
-      .input-container {
-        margin-bottom: 20px;
-      }
-  
-      input {
-        width: 100%;
-        box-sizing: border-box;
-        margin-bottom: 5px;
-      }
-  
-      .drag-container {
-        margin-bottom: 20px;
-      }
-  
-      .draggable {
-        cursor: move;
-        border: 1px solid #ddd;
-        padding: 10px;
-        margin-bottom: 5px;
-      }
-      </style>
+  </style>
 
   
     
@@ -147,28 +126,29 @@
 
 
 
-      function deleteDersHoca() {
-        var DersHocaID = document.getElementById("DersHoca").value;
+    function deleteDersHoca() {
+    var DersHocaID = document.getElementById("DersHocaID").value;
 
-        fetch("/delete-endpoint", {
-          method: "POST",
-          headers: {
+    fetch("/delete-endpoint", {
+        method: "POST",
+        headers: {
             "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        },
+        body: JSON.stringify({
             DersHocaID: DersHocaID,
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            alert("Ders ve Hoca Silme başarılı.");
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            alert("Ders ve Hoca Silme başarısız.");
-          });
-      }
+        }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        console.log(data);
+        alert("Ders ve Hoca Silme başarılı.");
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+        alert("Ders ve Hoca Silme başarısız.");
+    });
+}
+
 
       function updateDersHoca() {
       var DersID = document.getElementById("DersID").value;
@@ -212,149 +192,32 @@
       });
   }
   </script>
-  
-    <h2>Haftanın Günleri ve Saat Aralıkları</h2>
 
-    <div class="input-container">
-      <label for="bagimsizInput">Bağımsız Input:</label>
-      <input type="text" id="bagimsizInput" placeholder="Veri giriniz">
-      <button id="ekleButton">Ekle</button>
-    </div>
-  
-    <div class="drag-container">
-      <div class="draggable" draggable="true" id="surukleBirak">Sürükleyip Bırak</div>
-    </div>
-
-  <table id="haftaTablosu">
-    <tr>
-      <th>Gün</th>
-      <th>Saat 9:00 - 10:00</th>
-      <th>Saat 10:00 - 11:00</th>
-      <th>Saat 11:00 - 12:00</th>
-      <th>Saat 12:00 - 13:00</th>
-      <th>Saat 13:00 - 14:00</th>
-      <th>Saat 14:00 - 15:00</th>
-      <th>Saat 15:00 - 16:00</th>
-    </tr>
-    <tr>
-      <td>Pazartesi</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Salı</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Çarşamba</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Perşembe</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Cuma</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Cumartesi</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Pazar</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
+    <table id="haftaTablosu">
+      <tr>
+          <th>Gün</th>
+          <th>Saat 9:00 - 10:00</th>
+          <th>Saat 10:00 - 11:00</th>
+          <th>Saat 11:00 - 12:00</th>
+          <th>Saat 12:00 - 13:00</th>
+          <th>Saat 13:00 - 14:00</th>
+          <th>Saat 14:00 - 15:00</th>
+          <th>Saat 15:00 - 16:00</th>
+      </tr>
   </table>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const draggableElement = document.getElementById('surukleBirak');
-      const tableElement = document.getElementById('haftaTablosu');
-      const bagimsizInputElement = document.getElementById('bagimsizInput');
-      const ekleButton = document.getElementById('ekleButton');
+    fetch('/get-schedule')
+        .then(response => response.text())  // JSON yerine HTML alıyoruz
+        .then(data => {
+            const tableContainer = document.getElementById('haftaTablosu');
+            tableContainer.innerHTML = data;  // HTML içeriğini doğrudan ekliyoruz
+        })
+        .catch(error => console.error('Hata:', error));
+});
 
-      draggableElement.addEventListener('dragstart', function (e) {
-        e.dataTransfer.setData('text/plain', bagimsizInputElement.value);
-      });
-
-      tableElement.addEventListener('dragover', function (e) {
-        e.preventDefault();
-      });
-
-      tableElement.addEventListener('drop', function (e) {
-        e.preventDefault();
-        const data = e.dataTransfer.getData('text/plain');
-        const tableCell = e.target.closest('td');
-
-        if (tableCell) {
-          tableCell.textContent = data;
-        }
-      });
-
-      ekleButton.addEventListener('click', function () {
-        const selectedCell = document.querySelector('.selected-cell');
-        if (selectedCell) {
-          selectedCell.textContent = bagimsizInputElement.value;
-        }
-      });
-
-      // Tablodaki hücrelere tıklanınca seçili hücre olacak
-      tableElement.addEventListener('click', function (e) {
-        const clickedCell = e.target.closest('td');
-        if (clickedCell) {
-          // Önceki seçili hücrenin stilini temizle
-          const selectedCell = document.querySelector('.selected-cell');
-          if (selectedCell) {
-            selectedCell.classList.remove('selected-cell');
-          }
-          // Yeni seçili hücreye stil ekle
-          clickedCell.classList.add('selected-cell');
-        }
-      });
-    });
-  </script>
+</script>
 
 
 
