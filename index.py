@@ -155,35 +155,41 @@ def update(
         if connection.is_connected():
             cursor.close()
             connection.close()
-
 def get_schedule_from_database():
     try:
         connection = connect()
         cursor = connection.cursor()
 
-        # Veritabanından günleri çek
+        # Ders sınıflarını temsil eden bir liste
+        siniflar = ["1040", "1041", "1042", "1043"]  # İhtiyaca göre güncelleyin
+
+        # Her sınıf için ayrı tablo oluşturun
+        schedule_data = {}
+
         cursor.execute("SELECT DISTINCT GunAdi FROM gun")
         days = [row[0] for row in cursor.fetchall()]
 
-        # Günler için dersleri çek
-        schedule_data = {}
+        for sinif in siniflar:
+            schedule_data[sinif] = {}
 
-        for day in days:
-            cursor.execute("""
-                SELECT s.SaatAdi, d.DersAdi
-                FROM ders d
-                JOIN dershocalar dh ON d.DersID = dh.DersID
-                JOIN gun g ON dh.GunID = g.GunID
-                JOIN saat s ON dh.SaatID = s.SaatID
-                WHERE g.GunAdi = %s
-                ORDER BY s.SaatAdi;
-            """, (day,))
+            for day in days:
+                cursor.execute("""
+                    SELECT s.SaatAdi, d.DersAdi
+                    FROM ders d
+                    JOIN dershocalar dh ON d.DersID = dh.DersID
+                    JOIN gun g ON dh.GunID = g.GunID
+                    JOIN saat s ON dh.SaatID = s.SaatID
+                    WHERE g.GunAdi = %s AND dh.Sinif = %s
+                    ORDER BY s.SaatAdi;
+                """, (day, sinif))
 
-            # Her gün için bir saat ve o saate ait ders bilgilerini içeren bir sözlük oluştur
-            lessons_by_hour = {hour: lesson for hour, lesson in cursor.fetchall()}
-            
-            # Oluşturulan sözlüğü gün adıyla birlikte schedule_data'ya ekle
-            schedule_data[day] = lessons_by_hour
+                # Her gün için bir saat ve o saate ait ders bilgilerini içeren bir sözlük oluştur
+                lessons_by_hour = {hour: lesson for hour, lesson in cursor.fetchall()}
+                
+                # Oluşturulan sözlüğü gün adıyla birlikte schedule_data'ya ekle
+                schedule_data[sinif][day] = lessons_by_hour
+
+            print(schedule_data)
 
         return schedule_data
 
@@ -194,8 +200,6 @@ def get_schedule_from_database():
         if connection.is_connected():
             cursor.close()
             connection.close()
-
-
 
 @app.route("/")
 def index():
@@ -268,23 +272,42 @@ def update_endpoint():
 
 @app.route('/get-schedule', methods=['GET'])
 def get_schedule():
-    # Veritabanından gün ve ders bilgilerini çek
-    schedule_data = get_schedule_from_database()
+    try:
+        # Veritabanından gün ve ders bilgilerini çek
+        schedule_data = get_schedule_from_database()
 
-    # Tabloyu HTML formatına çevir
-    table_html = '<table id="haftaTablosu">'
-    table_html += '<tr><th>Gün</th><th>Saat 9:00 - 10:00</th><th>Saat 10:00 - 11:00</th><th>Saat 11:00 - 12:00</th><th>Saat 12:00 - 13:00</th><th>Saat 13:00 - 14:00</th><th>Saat 14:00 - 15:00</th><th>Saat 15:00 - 16:00</th></tr>'
+        # Tabloyu HTML formatına çevir
+        tables_html = ""
 
-    for gun, dersler in schedule_data.items():
-        table_html += f'<tr><td>{gun}</td>'
-        for saat, ders in dersler.items():
-            table_html += f'<td>{ders}</td>'
-        table_html += '</tr>'
+        for sinif, sinif_schedule in schedule_data.items():
+            table_html = f'<h2>{sinif} Sınıfı</h2>'
+            table_html += f'<table id="{sinif}_haftaTablosu">'
+            table_html += '<tr><th>Gün</th><th>Saat 9:00 - 10:00</th><th>Saat 10:00 - 11:00</th><th>Saat 11:00 - 12:00</th><th>Saat 12:00 - 13:00</th><th>Saat 13:00 - 14:00</th><th>Saat 14:00 - 15:00</th><th>Saat 15:00 - 16:00</th></tr>'
 
-    table_html += '</table>'
+            for gun, dersler in sinif_schedule.items():
+                table_html += f'<tr><td>{gun}</td>'
+                table_html += f'<td>{dersler.get("09:00:00", "")}</td>'
+                table_html += f'<td>{dersler.get("10:00:00", "")}</td>'
+                table_html += f'<td>{dersler.get("11:00:00", "")}</td>'
+                table_html += f'<td>{dersler.get("12:00:00", "")}</td>'
+                table_html += f'<td>{dersler.get("13:00:00", "")}</td>'
+                table_html += f'<td>{dersler.get("14:00:00", "")}</td>'
+                table_html += f'<td>{dersler.get("15:00:00", "")}</td>'
+                table_html += '</tr>'
 
-    return table_html
+            table_html += '</table>'
+            tables_html += table_html
 
+        return tables_html
+
+    except Exception as e:
+        print("Hata:", str(e))
+        return "Bir hata oluştu."
+
+
+    except Exception as e:
+        print("Hata:", str(e))
+        return "Bir hata oluştu."
 
 
     
