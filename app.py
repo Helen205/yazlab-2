@@ -20,27 +20,24 @@ kisitlar = cursor.fetchall()
 # Graf oluştur
 G = nx.Graph()
 
-# Ders düğümlerini ve Hoca düğümlerini ekle
+
 for iliski in ders_hoca_iliskileri:
     G.add_node(f"Ders_{iliski[0]}", label=f"Ders {iliski[0]}", tur="Ders")
     G.add_node(f"Hoca_{iliski[1]}", label=f"Hoca {iliski[1]}", tur="Hoca")
     G.add_edge(f"Ders_{iliski[0]}", f"Hoca_{iliski[1]}")
 
-# Kısıtları çizgeye entegre etmek için uygun düğümlere özellikler ekleyin
+
 for kisit in kisitlar:
     hoca_node = f"Hoca_{kisit[0]}"
     G.nodes[hoca_node]["GunID"] = kisit[1]
     G.nodes[hoca_node]["SaatID"] = kisit[2]
 
 
-# Kısıtları kontrol eden özel bir renklendirme fonksiyonu
+# renklendirme fonksiyonu
 def custom_coloring(G):
-    coloring = {}  # Düğümlerin renkleri
-    # Renklendirme algoritmasını uygula
+    coloring = {}  
     for node in G.nodes:
-        # Kısıtları kontrol et
         if satisfies_constraints(G.nodes[node], coloring):
-            # Kısıtlara uyuyorsa, bir renk ata
             color = assign_color(node, coloring)
             coloring[node] = color
     return coloring
@@ -67,24 +64,17 @@ def satisfies_constraints(node, coloring):
     return True
 
 def assign_color(node, coloring):
-    # Kısıtları kontrol et
     if satisfies_constraints(node, coloring):
-        # Kısıtlara uyuyorsa, bir renk ata
         color = assign_color(node, coloring)
         return color
     else:
-        # Kısıtlara uymuyorsa, farklı bir renk ata
         return 1
     
-# Grafi renklendir (farklı renklendirme stratejisi kullanabilirsiniz)
 coloring = nx.coloring.greedy_color(G, strategy="largest_first")
 
-# Grafı görselleştir
-
-# Düğüm etiketlerini ekleyin
 labels = {node: G.nodes[node]['label'] for node in G.nodes}
 
-# Graf analizi
+
 print("Düğüm Sayısı:", G.number_of_nodes())
 print("Kenar Sayısı:", G.number_of_edges())
 print("Bağlantı Bileşenleri:", list(nx.connected_components(G)))
@@ -104,6 +94,6 @@ nx.draw(
 plt.title("Ders-Hoca İlişkileri Grafi")
 plt.show()
 
-# MySQL bağlantısını kapat
+# MySQL bağlantısını kapatma
 cursor.close()
 conn.close()
