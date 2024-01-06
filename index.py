@@ -149,7 +149,7 @@ def update(
         ):
             # Kontrolleri gerçekleştir
             if check_constraints(
-                cursor, yeni_HocaID, yeni_GunID, yeni_SaatID, yeni_Sinif
+                cursor, yeni_HocaID,yeni_DersID, yeni_GunID, yeni_SaatID, yeni_Sinif
             ):
                 # Kısıtlara uygunsa güncelleme işlemini gerçekleştir
                 sql = "UPDATE dershocalar SET DersID=%s, HocaID=%s, GunID=%s, SaatID=%s, Sinif= %s WHERE DersID=%s AND HocaID=%s AND GunID=%s AND SaatID=%s AND Sinif=%s"
@@ -184,34 +184,37 @@ def update(
             cursor.close()
             connection.close()
 
-
 def check_constraints(
-    cursor, HocaID, GunID, SaatID, Sinif, for_update=False, current_dershocaid=None
+    cursor, HocaID,DersID, GunID, SaatID, Sinif, for_update=False, current_dershocaid=None
 ):
-    # Eklemek
+    # Eklemek için sorgu
     if not for_update:
         cursor.execute(
             """
             SELECT COUNT(*)
             FROM dershocalar
-            WHERE HocaID = %s AND GunID = %s AND SaatID = %s AND Sinif = %s;
-        """,
-            (HocaID, GunID, SaatID, Sinif),
+            WHERE (HocaID = %s AND GunID = %s AND SaatID = %s AND Sinif = %s) OR (HocaID = %s AND GunID = %s AND SaatID = %s ) OR
+                  (GunID = %s AND SaatID = %s AND Sinif = %s)OR (GunID = %s AND SaatID = %s AND DersID = %s);
+            """,
+            (HocaID, GunID, SaatID, Sinif,HocaID, GunID, SaatID, GunID, SaatID, Sinif, GunID, SaatID ,DersID),
         )
     else:
-        # Güncellemek
+        # Güncellemek için sorgu
         cursor.execute(
             """
             SELECT COUNT(*)
             FROM dershocalar
-            WHERE HocaID = %s AND GunID = %s AND SaatID = %s AND Sinif = %s AND DersHocaID != %s;
-        """,
-            (HocaID, GunID, SaatID, Sinif, current_dershocaid),
+            WHERE ((HocaID = %s AND GunID = %s AND SaatID = %s AND Sinif = %s) OR (HocaID = %s AND GunID = %s AND SaatID = %s ) OR
+                   (GunID = %s AND SaatID = %s AND Sinif = %s) OR (GunID = %s AND SaatID = %s AND DersID = %s)) AND
+                  DersHocaID != %s;
+            """,
+            (HocaID, GunID, SaatID, Sinif,HocaID, GunID, SaatID, GunID, SaatID, Sinif, GunID, SaatID, DersID, current_dershocaid),
         )
 
-    count = cursor.fetchone()[0]
+    count = cursor.fetchone()
 
-    return count == 0
+    return count is not None and count[0] == 0
+
 
 
 def get_schedule_from_database():
@@ -281,13 +284,13 @@ def add_endpoint():
         connection = connect()
         cursor = connection.cursor()
 
-        if not all([DersID, HocaID, GunID, SaatID, Sinif]):
+        if not all([DersID, HocaID, GunID, SaatID]):
             DersID = find_id_by_name("ders", data.get("DersAdi"))
             HocaID = find_id_by_name("hoca", data.get("HocaAdi"))
             GunID = find_id_by_name("gun", data.get("GunAdi"))
             SaatID = find_id_by_name("saat", data.get("SaatAdi"))
 
-        if check_constraints(cursor, DersID, HocaID, GunID, SaatID, Sinif):
+        if check_constraints(cursor, DersID, HocaID, GunID, SaatID, DersID, Sinif):
             add(DersID, HocaID, GunID, SaatID, Sinif)
             return jsonify({"message": "Veri başarıyla eklendi"})
         else:
@@ -357,7 +360,7 @@ def update_endpoint():
             yeni_GunID = find_id_by_name("gun", data.get("yeni_GunAdi"))
             yeni_SaatID = find_id_by_name("saat", data.get("yeni_SaatAdi"))
 
-        if check_constraints(cursor, yeni_HocaID, yeni_GunID, yeni_SaatID, yeni_Sinif):
+        if check_constraints(cursor, yeni_HocaID,yeni_DersID, yeni_GunID, yeni_SaatID, yeni_Sinif):
             update(
                 DersID,
                 HocaID,

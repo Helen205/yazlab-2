@@ -45,9 +45,8 @@ def custom_coloring(G):
             coloring[node] = color
     return coloring
 
-# Örnek kısıtları kontrol eden bir fonksiyon
+
 def satisfies_constraints(node, coloring):
-    # Örnek: Belirli bir gün ve saatte başka bir ders var mı kontrol et
     hoca_gun = node["GunID"]
     hoca_saat = node["SaatID"]
     hoca_id = node ["HocaID"]
@@ -55,9 +54,15 @@ def satisfies_constraints(node, coloring):
     ders_id = node ["DersID"]
     sinif = node ["Sinif"]
     for other_node, other_props in G.nodes.items():
-        if other_node != node and other_props.get("GunID") == hoca_gun and other_props.get("SaatID") == hoca_saat and other_props.get("KacinciSinif") == kacinci_sinif:
+        if other_node != node and other_props.get("GunID") == hoca_gun and other_props.get("SaatID") == hoca_saat and other_props.get("KacinciSinif") == kacinci_sinif :
             return False
         if other_node != node and other_props.get("GunID") == hoca_gun and other_props.get("SaatID") == hoca_saat and other_props.get("HocaID") == hoca_id and other_props.get("DersID") == ders_id and other_props.get("Sinif") == sinif:
+            return False
+        if other_node != node and other_props.get("GunID") == hoca_gun and other_props.get("SaatID") == hoca_saat and other_props.get("Sinif") == sinif:
+            return False
+        if other_node != node and other_props.get("GunID") == hoca_gun and other_props.get("SaatID") == hoca_saat and other_props.get("HocaID") == hoca_id:
+            return False
+        if other_node != node and other_props.get("GunID") == hoca_gun and other_props.get("SaatID") == hoca_saat and other_props.get("DersID") == ders_id:
             return False
     return True
 
