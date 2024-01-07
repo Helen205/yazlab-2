@@ -59,7 +59,7 @@ def is_valid_connection(node, other_node, other_props):
     if other_props.get("HocaID") == hoca_id:
         return True
 
-    return False
+
 
 
 for iliski in ders_hoca_iliskileri:
